@@ -27,22 +27,30 @@ type Props struct {
 }
 
 func main() {
-	props := Props{
-		addr: *flag.String("a", "172.20.10.1", "Proxy address to expose to clients"),
-		bind: *flag.String("b", "0.0.0.0", "Address to bind to"),
+	addr := flag.String("a", "172.20.10.1", "Proxy address to expose to clients")
+	bind := flag.String("b", "0.0.0.0", "Address to bind to")
+	socks := flag.Int("s", 0, "SOCKS5 proxy port")
+	http := flag.Int("p", 0, "HTTP proxy port")
+	discovery := flag.Int("d", 0, "HTTP port for auto proxy configuration discovery")
+	location := flag.Bool("l", false, "Whether to pool location details")
+	verbose := flag.Bool("v", false, "Enable verbose output")
+	help := flag.Bool("h", false, "Show help")
 
-		socks:     *flag.Int("s", 0, "SOCKS5 proxy port"),
-		http:      *flag.Int("p", 0, "HTTP proxy port"),
-		discovery: *flag.Int("d", 0, "HTTP port for auto proxy configuration discovery"),
+	flag.Parse() // Important: Parse the flags first
 
-		location: *flag.Bool("l", false, "Whether to pool location details"),
-		verbose:  *flag.Bool("v", false, "Enable verbose output"),
-	}
-	help := *flag.Bool("h", false, "Show help")
-
-	if help {
+	if *help {
 		flag.PrintDefaults()
 		os.Exit(0)
+	}
+
+	props := Props{
+		addr:      *addr,
+		bind:      *bind,
+		socks:     *socks,
+		http:      *http,
+		discovery: *discovery,
+		location:  *location,
+		verbose:   *verbose,
 	}
 
 	if props.discovery != 0 {
